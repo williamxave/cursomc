@@ -1,30 +1,37 @@
 package com.williambohn.cursomc.resources;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.williambohn.cursomc.domain.Categoria;
+import com.williambohn.cursomc.services.CategoriaService;
 
 @RestController
-@RequestMapping(value="/categorias")
+@RequestMapping(value = "/categorias")
 public class CategoriaResource {
-	
-	@RequestMapping(method=RequestMethod.GET)
-	public List<Categoria> listar() {
-		
-		Categoria cat1 = new Categoria(1, "Informatica");
-		Categoria cat2 = new Categoria(2, "Escritorio");
-		
-		
-		List<Categoria> lista = new ArrayList<>();
-		lista.add(cat1);
-		lista.add(cat2);
-		
-		return lista;
+
+	@Autowired
+	private CategoriaService service;
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> find(@PathVariable Integer id) { // Para que o Spring saiba que o ID da url vai vir do ID
+																// do metodo precisa usar a anotacao @PathVariable
+		Categoria obj = service.buscar(id);
+		return ResponseEntity.ok().body(obj);
+
+		/*
+		 * ResponseEntity ele encapsula uma resposta HTTP pra um serviço REST <?> é para
+		 * retorna qualquer tipo, pode ou nao encontrar a resposta
+		 * 
+		 * Para retornar a consulta usa-se >> ResponseEntity.ok() << que vai retorna um
+		 * ok, que a busca foi feita com sucesso, e tbm usa-se >> body(obj) << que vai
+		 * retorna no corpo da consulta o objeto pesquisado
+		 * 
+		 */
 	}
 
 }
