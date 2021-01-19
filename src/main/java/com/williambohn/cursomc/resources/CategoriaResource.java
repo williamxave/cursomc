@@ -18,11 +18,10 @@ public class CategoriaResource {
 	private CategoriaService service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) { // Para que o Spring saiba que o ID da url vai vir do ID
-																// do metodo precisa usar a anotacao @PathVariable
+	public ResponseEntity<?> find(@PathVariable Integer id) { // Para que o Spring saiba que o ID da url vai vir do ID do metodo precisa usar a anotacao @PathVariable
 		Categoria obj = service.buscar(id);
 		return ResponseEntity.ok().body(obj);
-
+		
 		/*
 		 * ResponseEntity ele encapsula uma resposta HTTP pra um serviço REST <?> é para
 		 * retorna qualquer tipo, pode ou nao encontrar a resposta
@@ -32,6 +31,8 @@ public class CategoriaResource {
 		 * retorna no corpo da consulta o objeto pesquisado
 		 * 
 		 */
+		
+		
 	}
 
 }

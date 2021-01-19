@@ -12,26 +12,39 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
-public class Produto implements Serializable{
+public class Produto implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	private String nome;
 	private Double preco;
-	
-	//Criando a table de meio de campo entre categorias e produtos ManyToMany
-	
-	@ManyToMany  // usado em banco relacional, muito para muitos. Precisa criar uma table de relacao 
-	// @JoinTable Anotacao que cria a tabela de relacao ManyToMany.
-	@JoinTable(name = "PRODUTO_CATEGORIA",
-	joinColumns  = @JoinColumn (name = "produto_id"),       // Key do produto
-	inverseJoinColumns = @JoinColumn(name = "categoria_id") // key da categoria	
-	
+
+	// Criando a table de meio de campo entre categorias e produtos ManyToMany
+
+	@JsonBackReference /*
+						 * Do outro lado da associacao ja foram buscados os objetos agora eu nao prefiro
+						 * buscar mais.Na classe categoria tem o @JsonManagedReference
+						 */
+	@ManyToMany /*
+				 * usado em banco relacional, muito para muitos. Precisa criar uma table de
+				 * relacao
+				 */
+
+	/* @JoinTable Anotacao que cria a tabela de relacao ManyToMany.
+	 * PRODUTO_CATEGORIA nome da table de associacao
+	 */
+	@JoinTable(name = "PRODUTO_CATEGORIA", joinColumns = @JoinColumn(name = "produto_id"), // Key do produto
+			inverseJoinColumns = @JoinColumn(name = "categoria_id") // key da categoria
+
 	)
+
 	private List<Categoria> categorias = new ArrayList<>();
 
 	public Produto(Integer id, String nome, Double preco) {
@@ -100,5 +113,4 @@ public class Produto implements Serializable{
 		return true;
 	}
 
-	
 }
