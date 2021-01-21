@@ -33,10 +33,14 @@ public class Cliente implements Serializable {
 	@OneToMany(mappedBy = "cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 
-	@ElementCollection // para mapear os telefones e a jpa criar a tabela como uma entidade fraca usamos @ElementCollection
+	@ElementCollection // para mapear os telefones e a jpa criar a tabela como uma entidade fraca
+						// usamos @ElementCollection
 	@CollectionTable(name = "TELEFONE") // @CollectionTable cria a tabela da colecao
 	private Set<String> telefones = new HashSet<>(); // Set é um conjunto e conjunto não aceita repetição, então já
 														// garante que não terá números repetidos;
+
+	@OneToMany(mappedBy= "cliente")
+	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
 		super();
@@ -105,6 +109,14 @@ public class Cliente implements Serializable {
 
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	@Override
