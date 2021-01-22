@@ -13,6 +13,7 @@ import com.williambohn.cursomc.domain.Cidade;
 import com.williambohn.cursomc.domain.Cliente;
 import com.williambohn.cursomc.domain.Endereco;
 import com.williambohn.cursomc.domain.Estado;
+import com.williambohn.cursomc.domain.ItemPedido;
 import com.williambohn.cursomc.domain.Pagamento;
 import com.williambohn.cursomc.domain.PagamentoComBoleto;
 import com.williambohn.cursomc.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.williambohn.cursomc.repositoreis.CidadeRepository;
 import com.williambohn.cursomc.repositoreis.ClienteRepository;
 import com.williambohn.cursomc.repositoreis.EnderecoRepository;
 import com.williambohn.cursomc.repositoreis.EstadoRepository;
+import com.williambohn.cursomc.repositoreis.ItemPedidoRepository;
 import com.williambohn.cursomc.repositoreis.PagamentoRepository;
 import com.williambohn.cursomc.repositoreis.PedidoRepository;
 import com.williambohn.cursomc.repositoreis.ProdutoRepository;
@@ -50,6 +52,8 @@ public class CursomcApplication implements CommandLineRunner { // CommandLineRun
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -101,25 +105,40 @@ public class CursomcApplication implements CommandLineRunner { // CommandLineRun
 
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2));
-		
+
 		// ======================================================
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		
+
 		Pedido ped1 = new Pedido(null, sdf.parse("21/01/2021 19:45"), cli1, e1);
 		Pedido ped2 = new Pedido(null, sdf.parse("21/01/2021 20:00"), cli1, e2);
-		
+
 		Pagamento pag1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
 		ped1.setPagamento(pag1);
-		
-		Pagamento pag2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/2/2021 00:00"), null);
+
+		Pagamento pag2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/2/2021 00:00"),
+				null);
 		ped2.setPagamento(pag2);
+
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pag1, pag2));
+
+		// ======================================================
+
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.0, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.0, 2, 80.0);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.0, 1, 800.00);
+
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
 		
-		cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
-		
-		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
-		pagamentoRepository.saveAll(Arrays.asList(pag1,pag2));
-		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2,ip3));
 
 	}
 }
