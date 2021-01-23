@@ -21,7 +21,7 @@ public class CategoriaService {
 	 * retorna null
 	 */
 	
-	public Categoria buscar(Integer id) {   
+	public Categoria find(Integer id) {   
 		Optional<Categoria> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				 "Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
@@ -31,6 +31,16 @@ public class CategoriaService {
 	
 	public Categoria insert(Categoria obj) {
 		obj.setId(null); // Verifica se o id nao esta null, se estiver null, é feita o insert, se o id nao for null, o sistema considera uma atualizacao
+		return repo.save(obj);
+	}
+	
+	/*
+	 * metodo para atualizar;
+	 * o metodo save() serve para inserir e atualizar
+	 */
+	
+	public Categoria update(Categoria obj) {
+		find(obj.getId());
 		return repo.save(obj);
 	}
 }

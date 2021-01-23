@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.williambohn.cursomc.domain.Categoria;
 import com.williambohn.cursomc.services.CategoriaService;
@@ -24,9 +22,9 @@ public class CategoriaResource {
 	private CategoriaService service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) { // Para que o Spring saiba que o ID da url vai vir do ID
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) { // Para que o Spring saiba que o ID da url vai vir do ID
 																// do metodo precisa usar a anotacao @PathVariable
-		Categoria obj = service.buscar(id);
+		Categoria obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 
 		/*
@@ -51,6 +49,7 @@ public class CategoriaResource {
 	 * 
 	 * e para mostrar o codigo de criacao usa-se o ResponseEntity.created(aqui dentro vem a sua uri ex: uri) e o . build(); builda para voc
 	 * 
+	 * ResponseEntity<Void>  retorna um corpo vazion com for inserido com sucesso
 	 */
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -60,5 +59,20 @@ public class CategoriaResource {
 					.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	/*
+	 * PUT atualiza um dado
+	 * 
+	 * 
+	 */
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT )
+	public ResponseEntity<Void> update(@RequestBody Categoria obj,@PathVariable Integer id){
+		obj.setId(id);
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
+		
+	}
+	
 
 }
