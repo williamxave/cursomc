@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 public class Categoria implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -20,8 +18,7 @@ public class Categoria implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
-
-	@JsonManagedReference /*
+/*
 							 * (trata a referencia siclica)Sem isso o programa fica serializando
 							 * infinitamente entre categoria e produto. Vai ser uma referencia gerenciada
 							 * pelo jason, FAZER ISSO DO LADO QUE VOC QUER QUE VENHA OS OBJETOS ASSOCIADOS

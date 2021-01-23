@@ -15,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -31,7 +30,7 @@ public class Produto implements Serializable {
 
 	// Criando a table de meio de campo entre categorias e produtos ManyToMany
 
-	@JsonBackReference /*
+	@JsonIgnore /*
 						 * Do outro lado da associacao ja foram buscados os objetos agora eu nao prefiro
 						 * buscar mais.Na classe categoria tem o @JsonManagedReference
 						 */
