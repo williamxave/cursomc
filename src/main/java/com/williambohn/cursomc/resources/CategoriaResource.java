@@ -30,7 +30,6 @@ public class CategoriaResource {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) { // Para que o Spring saiba que o ID da url vai vir do ID
-																// do metodo precisa usar a anotacao @PathVariable
 		Categoria obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 
@@ -97,6 +96,7 @@ public class CategoriaResource {
 	 *  para passar o list.stream().map(obj -> new CategoriaDTO(obj)) para o tipo lista para isso usa-se  collect(Collectors.toList())
 	 *  com isso em uma linha dapra converter uma lista para outra em uma linha
 	 */
+	
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<CategoriaDTO>> findAll(){
