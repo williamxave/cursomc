@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -29,8 +30,13 @@ public class Cliente implements Serializable {
 	private String cpfOuCnpj;
 	private Integer tipo;
 
-	
-	@OneToMany(mappedBy = "cliente")
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) /*
+																 * cascade = CascadeType.ALL Toda operacao que modificar
+																 * um cliente vai refletir em cascada nos enderecos,
+																 * se um cliente for apagado, irá apagar junto dele os enderecos
+																 * 
+																 */
+
 	private List<Endereco> enderecos = new ArrayList<>();
 
 	@ElementCollection // para mapear os telefones e a jpa criar a tabela como uma entidade fraca
@@ -40,7 +46,7 @@ public class Cliente implements Serializable {
 														// garante que não terá números repetidos;
 
 	@JsonIgnore
-	@OneToMany(mappedBy= "cliente")
+	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
@@ -49,7 +55,7 @@ public class Cliente implements Serializable {
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
-		this.tipo = (tipo==null) ? null : tipo.getCod();
+		this.tipo = (tipo == null) ? null : tipo.getCod();
 	}
 
 	public Cliente() {
