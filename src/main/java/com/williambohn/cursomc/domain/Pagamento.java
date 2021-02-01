@@ -11,10 +11,12 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.williambohn.cursomc.domain.enums.EstadoPagamento;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED) // Mapeando Heranca no JPA, VAI CRIAR UMA TABELA PARA CADA FILHO
+@JsonTypeInfo(use  = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type") // diz que nossa classe tera um campo adicional chamado @type
 public abstract class Pagamento implements Serializable {
 	private static final long serialVersionUID = 1L;
 

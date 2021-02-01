@@ -61,6 +61,7 @@ public class Pedido implements Serializable {
 	public Pedido() {
 	}
 	
+	// Soma todos os valor so itens pedidos;
 	public double getValorTotal() {
 		double soma = 0.0;
 		for(ItemPedido p : itens) {
