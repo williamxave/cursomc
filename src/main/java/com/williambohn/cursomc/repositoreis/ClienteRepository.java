@@ -20,6 +20,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	 * sabe que voc quer fazer uma pesquisa por email  -> "findByEmail";
 	 * 
 	 */
-	
+
 }
 

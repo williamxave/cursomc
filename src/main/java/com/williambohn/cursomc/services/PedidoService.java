@@ -12,6 +12,7 @@ import com.williambohn.cursomc.domain.ItemPedido;
 import com.williambohn.cursomc.domain.PagamentoComBoleto;
 import com.williambohn.cursomc.domain.Pedido;
 import com.williambohn.cursomc.domain.enums.EstadoPagamento;
+import com.williambohn.cursomc.repositoreis.ClienteRepository;
 import com.williambohn.cursomc.repositoreis.ItemPedidoRepository;
 import com.williambohn.cursomc.repositoreis.PagamentoRepository;
 import com.williambohn.cursomc.repositoreis.PedidoRepository;
@@ -35,8 +36,15 @@ public class PedidoService {
 
 	@Autowired
 	private ProdutoService produtoService;
+	
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private ClienteService clienteService;
 
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
@@ -48,6 +56,7 @@ public class PedidoService {
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);
 		obj.setData(new Date());
+		obj.setCliente(clienteService.find(obj.getCliente().getId()));
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
 		if (obj.getPagamento() instanceof PagamentoComBoleto) {
@@ -60,11 +69,13 @@ public class PedidoService {
 		
 		for (ItemPedido p : obj.getItens()) {
 			p.setDesconto(0.0);
-			p.setPreco(produtoService.find(p.getProduto().getId()).getPreco());
+			p.setProduto(produtoService.find(p.getProduto().getId()));
+			p.setPreco(p.getProduto().getPreco());
 			p.setPedido(obj);
 		}
 		
 		itemPedidoRepository.saveAll(obj.getItens());
+		System.out.println(obj);
 
 		return obj;
 

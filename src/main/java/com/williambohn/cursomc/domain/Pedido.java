@@ -1,8 +1,11 @@
 package com.williambohn.cursomc.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -24,7 +27,7 @@ public class Pedido implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm") // MASCARA PARA PADRONIZAR DATA
 	private Date data;
 
@@ -34,12 +37,11 @@ public class Pedido implements Serializable {
 																 * entidade tranciente
 																 * 
 																 * Com isso fizemos um mapeamento bidirecional um pra um
-	
+																 * 
 																 */
-	
+
 	private Pagamento pagamento;
 
-	
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
@@ -48,7 +50,7 @@ public class Pedido implements Serializable {
 	@JoinColumn(name = "endereco_de_entrega_id")
 	private Endereco enderecoDeEntrega;
 
-	@OneToMany(mappedBy= "id.pedido")
+	@OneToMany(mappedBy = "id.pedido")
 	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Pedido(Integer id, Date data, Cliente cliente, Endereco enderecoDeEntrega) {
@@ -60,16 +62,16 @@ public class Pedido implements Serializable {
 
 	public Pedido() {
 	}
-	
+
 	// Soma todos os valor so itens pedidos;
 	public double getValorTotal() {
 		double soma = 0.0;
-		for(ItemPedido p : itens) {
+		for (ItemPedido p : itens) {
 			soma = soma + p.getSubTotal();
 		}
 		return soma;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -141,6 +143,28 @@ public class Pedido implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR")); // Formata os precos
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); // Formata as datas
+		StringBuilder builder = new StringBuilder();
+		builder.append("Pedido número: ");
+		builder.append(getId());
+		builder.append(", Data: ");
+		builder.append(sdf.format(getData()));
+		builder.append(", Cliente: ");
+		builder.append(getCliente().getNome());
+		builder.append(", Situação do pagamento: ");
+		builder.append(getPagamento().getEstado().getDescricao());
+		builder.append("\nDetalhes\n");
+		for (ItemPedido ip : getItens()) {
+			builder.append(ip.toString());
+		}
+		builder.append("Valor Total: ");
+		builder.append(nf.format(getValorTotal()));
+		return builder.toString();
 	}
 
 }
