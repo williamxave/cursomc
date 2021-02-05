@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.Email;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,9 @@ public class PedidoService {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
@@ -75,7 +79,7 @@ public class PedidoService {
 		}
 		
 		itemPedidoRepository.saveAll(obj.getItens());
-		System.out.println(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 
 		return obj;
 
